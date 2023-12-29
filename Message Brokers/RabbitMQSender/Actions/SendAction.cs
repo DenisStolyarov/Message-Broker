@@ -19,6 +19,7 @@ namespace RabbitMQSender.Actions
                 string message = $"Data - {i}";
 
                 Send(channel, message);
+
                 Console.WriteLine($"[i]: Sent - {message}");
             }
 
