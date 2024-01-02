@@ -9,6 +9,6 @@ ConnectionFactory factory = new()
 using IConnection connection = factory.CreateConnection();
 using IModel channel = connection.CreateModel();
 
-SubscribeAction.Start(channel);
+RoutingAction.Start(channel);
 
 Console.ReadLine();
