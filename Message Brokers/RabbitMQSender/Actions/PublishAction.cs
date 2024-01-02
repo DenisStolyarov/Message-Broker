@@ -3,16 +3,15 @@ using RabbitMQ.Client;
 
 namespace RabbitMQSender.Actions;
 
-public static class SendAction
+public static class PublishAction
 {
+    private const string ExchangeName = "publish";
+
     public static void Start(IModel channel)
     {
-        channel.QueueDeclare(
-            queue: "common",
-            durable: false,
-            exclusive: false,
-            autoDelete: false,
-            arguments: null);
+        channel.ExchangeDeclare(
+            exchange: ExchangeName,
+            type: ExchangeType.Fanout);
 
         for (int i = 0; i < 10; i++)
         {
@@ -28,8 +27,8 @@ public static class SendAction
             byte[] body = Encoding.UTF8.GetBytes(message);
 
             channel.BasicPublish(
-                exchange: string.Empty,
-                routingKey: "common",
+                exchange: ExchangeName,
+                routingKey: string.Empty,
                 basicProperties: null,
                 body: body);
         }
