@@ -4,16 +4,22 @@ using RabbitMQ.Client.Events;
 
 namespace RabbitMQReceiver.Actions;
 
-public static class ReceiveAction
+public static class SubscribeAction
 {
+    private const string ExchangeName = "publish";
+
     public static void Start(IModel channel)
     {
-        channel.QueueDeclare(
-            queue: "common",
-            durable: false,
-            exclusive: false,
-            autoDelete: false,
-            arguments: null);
+        channel.ExchangeDeclare(
+            exchange: ExchangeName,
+            type: ExchangeType.Fanout);
+
+        string queueName = channel.QueueDeclare().QueueName;
+
+        channel.QueueBind(
+            queue: queueName,
+            exchange: ExchangeName,
+            routingKey: string.Empty);
 
         EventingBasicConsumer consumer = new(channel);
 
@@ -26,7 +32,7 @@ public static class ReceiveAction
         };
 
         channel.BasicConsume(
-            queue: "common",
+            queue: queueName,
             autoAck: true,
             consumer);
     }
