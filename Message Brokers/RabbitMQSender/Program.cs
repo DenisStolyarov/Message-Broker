@@ -9,6 +9,6 @@ var factory = new ConnectionFactory()
 using IConnection connection = factory.CreateConnection();
 using IModel channel = connection.CreateModel();
 
-TopicAction.Start(channel);
+await RpcClient.Start(channel);
 
 Console.ReadLine();
